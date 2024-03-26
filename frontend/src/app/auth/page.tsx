@@ -15,12 +15,11 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Box } from "lucide-react"
 
 export default function Auth() {
+
     return (
         <main className="flex h-screen flex-col items-center justify-center p-24 gap-4">
-            <Box />
             <Tabs defaultValue="account" className="w-[400px]">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="account">Login</TabsTrigger>
@@ -45,7 +44,7 @@ export default function Auth() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Save changes</Button>
+                            <Button>Login</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
@@ -74,9 +73,13 @@ export default function Auth() {
                                 <Label htmlFor="passowrd">Password</Label>
                                 <Input id="password" type="password" defaultValue="" />
                             </div>
+                            <div className="space-y-1">
+                                <Label htmlFor="ProfileImage">Profile image</Label>
+                                <Input id="password" type="file" defaultValue="" />
+                            </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Save changes</Button>
+                            <Button>Register</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
