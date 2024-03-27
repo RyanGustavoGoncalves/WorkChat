@@ -1,28 +1,34 @@
-package com.goncalves.entities.users;
+package com.goncalves.api.entities.user;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity(name = "users")
 public class Users {
-    private String id_user;
-
-
+    @Id
+    private long id_user;
+    @Column
     private String name;
+    @Column
     private String username;
+    @Column
     private String email;
+    @Column
     private String password;
-    private byte[] profileImage;
 
-    public Users(String name, String username, String email, String password, byte[] profileImage) {
+    public Users(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.profileImage = profileImage;
     }
 
-    public String getId_user() {
+    public long getId_user() {
         return id_user;
     }
 
-    public void setId_user(String id_user) {
+    public void setId_user(long id_user) {
         this.id_user = id_user;
     }
 
@@ -56,13 +62,5 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public byte[] getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
     }
 }
