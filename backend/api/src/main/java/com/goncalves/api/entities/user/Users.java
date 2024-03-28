@@ -3,11 +3,16 @@ package com.goncalves.api.entities.user;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Entity(name = "users")
-public class Users {
+public class Users implements UserDetails {
     @Id
-    private long id_user;
+    private Long id_user;
+
     @Column
     private String name;
     @Column
@@ -28,7 +33,7 @@ public class Users {
         return id_user;
     }
 
-    public void setId_user(long id_user) {
+    public void setId_user(Long id_user) {
         this.id_user = id_user;
     }
 
@@ -55,12 +60,36 @@ public class Users {
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }
