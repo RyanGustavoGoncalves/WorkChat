@@ -1,8 +1,6 @@
 package com.goncalves.api.entities.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,7 +8,7 @@ import java.util.Collection;
 
 @Entity(name = "users")
 public class Users implements UserDetails {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_user;
 
     @Column
