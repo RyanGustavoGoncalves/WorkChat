@@ -1,4 +1,6 @@
-import React from 'react';
+'use client'
+
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -16,8 +18,27 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import { RegisterUser } from '../utils/registerUser';
+
+interface UserData {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+    profileImage: null | string;
+}
 
 const FormAuth: React.FC = () => {
+    const [userData, setUserData] = useState<UserData>({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+        profileImage: null,
+    });
+    const handleRegisterUser = async () => {
+        await RegisterUser();
+    }
     return (
         <Tabs defaultValue="account" className="w-[400px]">
             <TabsList className="grid w-full grid-cols-2">
@@ -56,30 +77,32 @@ const FormAuth: React.FC = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                        <div className="space-y-1">
-                            <Label htmlFor="name">Name</Label>
-                            <Input id="name" defaultValue="" />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="username">Username</Label>
-                            <Input id="username" defaultValue="" />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" defaultValue="" />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" defaultValue="" />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="profileImage">Profile image</Label>
-                            <Input id="profileImage" type="file" defaultValue="" />
-                        </div>
+                        <form>
+                            <div className="space-y-1">
+                                <Label htmlFor="name">Name</Label>
+                                <Input id="name" value={userData.name ?? ""} onChange={(e) => setUserData({ ...userData, name: e.target.value })} />
+                            </div>
+                            <div className="space-y-1">
+                                <Label htmlFor="username">Username</Label>
+                                <Input id="username" value={userData.username ?? ""} onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
+                            </div>
+                            <div className="space-y-1">
+                                <Label htmlFor="email">Email</Label>
+                                <Input id="email" value={userData.email ?? ""} onChange={(e) => setUserData({ ...userData, email: e.target.value })} />
+                            </div>
+                            <div className="space-y-1">
+                                <Label htmlFor="password">Password</Label>
+                                <Input id="password" type="password" value={userData.password ?? ""} onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
+                            </div>
+                            <div className="space-y-1">
+                                <Label htmlFor="profileImage">Profile image</Label>
+                                <Input id="profileImage" type="file" value={userData.profileImage ?? ""} onChange={(e) => setUserData({ ...userData, profileImage: e.target.value })} />
+                            </div>
+                            <div className="my-4">
+                                <Button onClick={() => handleRegisterUser()}>Register</Button>
+                            </div>
+                        </form>
                     </CardContent>
-                    <CardFooter>
-                        <Button>Register</Button>
-                    </CardFooter>
                 </Card>
             </TabsContent>
         </Tabs>
