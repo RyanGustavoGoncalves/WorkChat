@@ -1,8 +1,6 @@
 package com.goncalves.api.entities.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,7 +8,7 @@ import java.util.Collection;
 
 @Entity(name = "users")
 public class Users implements UserDetails {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_user;
 
     @Column
@@ -21,12 +19,15 @@ public class Users implements UserDetails {
     private String email;
     @Column
     private String password;
+    @Column
+    private byte[] profileImage;
 
-    public Users(String name, String username, String email, String password) {
+    public Users(String name, String username, String email, String password, byte[] profileImage) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.profileImage = profileImage;
     }
 
     public long getId_user() {
@@ -66,6 +67,14 @@ public class Users implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
     }
 
     @Override
