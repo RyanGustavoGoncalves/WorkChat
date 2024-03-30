@@ -37,7 +37,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestPart("profileImage") MultipartFile profileImage,
+    public ResponseEntity register(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
                                    @RequestPart("userData") @Valid AutenticarDados dados,
                                    UriComponentsBuilder uriComponentsBuilder) {
         try {

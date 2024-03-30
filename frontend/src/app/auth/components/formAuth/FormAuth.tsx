@@ -19,6 +19,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { registerUser } from '../utils/registerUser';
+import { Toaster } from 'sonner';
 
 interface UserData {
     name: string;
@@ -38,13 +39,11 @@ const FormAuth: React.FC = () => {
         password: ""
     });
     const handleRegisterUser = async () => {
-        console.log(profileImage);
-        console.log(userData);
-        
         await registerUser(userData, profileImage);
     }
     return (
         <Tabs defaultValue="account" className="w-[400px]">
+            <Toaster richColors position="top-right" />
             <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="account">Login</TabsTrigger>
                 <TabsTrigger value="password">Register</TabsTrigger>
@@ -85,28 +84,28 @@ const FormAuth: React.FC = () => {
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
-                                value={"ryan gustavo goncalves"}
+                                value={userData.name}
                                 onChange={(e) => setUserData({ ...userData, name: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="username">Username</Label>
                             <Input
                                 id="username"
-                                value={"RYAN"}
+                                value={userData.username}
                                 onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
-                                value={"ryan@gmail.com"}
+                                value={userData.email}
                                 onChange={(e) => setUserData({ ...userData, email: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="password">Password</Label>
                             <Input id="password"
                                 type="password"
-                                value={"123456789"}
+                                value={userData.password}
                                 onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
                         </div>
                         <div className="space-y-1">

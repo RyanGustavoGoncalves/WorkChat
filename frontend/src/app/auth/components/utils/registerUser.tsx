@@ -1,5 +1,5 @@
 'use client'
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 export const registerUser = async (userData, profileImage) => {
     try {
@@ -18,11 +18,9 @@ export const registerUser = async (userData, profileImage) => {
             body: formData,
         });
 
-        if (response.status === 201) {
-            toast.success("Sucess!", {
-                description: "Successfully registered!",
-            });
-        } else if (response.status === 400) {
+        if (response.ok) {
+            toast.success('Successfully registered!');
+        } else if (response.status === 403) {
             const errorData = await response.json();
             const errorArray = [];
 
@@ -30,9 +28,7 @@ export const registerUser = async (userData, profileImage) => {
                 const errorMessage = errorData[fieldName];
                 errorArray.push({ fieldName, errorMessage });
             }
-            toast.error("Error!", {
-                description: errorData.message,
-            });
+            toast.error(errorData.message)
             console.log(errorData);
         } else {
             console.log("Error: " + response.status);
