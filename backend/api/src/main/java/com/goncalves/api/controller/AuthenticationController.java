@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,23 +36,32 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager manager;
 
-
     @PostMapping("/register")
     public ResponseEntity register(@RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
                                    @RequestPart("userData") @Valid AutenticarDados dados,
                                    UriComponentsBuilder uriComponentsBuilder) {
         try {
+            // Validar os dados de registro do usuário
             validateRegistrationData(dados);
+
+            if (dados.password().length() < 9) {
+                // Se a senha tiver menos de 9 caracteres, retornar uma resposta de BadRequest
+                return ResponseEntity.badRequest()
+                        .body("Password field must have at least 9 characters.");
+            }
 
             // Criar um novo usuário com a senha criptografada
             String encryptedPassword = new BCryptPasswordEncoder().encode(dados.password());
 
             // Converta o MultipartFile para byte[]
-            byte[] profileImageBytes = profileImage.getBytes();
+            byte[] profileImageBytes = new byte[0];
+            if (profileImage != null) {
+                profileImageBytes = profileImage.getBytes();
+            }
 
-            Users newUser = new Users(dados.name(), dados.username(), dados.email(),
-                    encryptedPassword, profileImageBytes);
+            Users newUser = new Users(dados.name(), dados.username(), dados.email(), encryptedPassword, profileImageBytes);
             repository.save(newUser);
+
 
             // Construir a URI para o novo usuário
             var uri = uriComponentsBuilder.path("/users/{id_User}").buildAndExpand(newUser.getId_user()).toUri();
@@ -84,16 +94,29 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AutenticarDados dados) {
         try {
-            var authenticationToken = new UsernamePasswordAuthenticationToken(dados.username(), dados.password());
+            var user = repository.findByEmail(dados.username());
+
+            UserDetails username;
+
+            if (user != null) {
+                username = repository.findByUsername(user.getUsername());
+            } else {
+                username = repository.findByUsername(dados.username());
+            }
+
+            var authenticationToken = new UsernamePasswordAuthenticationToken(username, dados.password());
 
             var authentication = manager.authenticate(authenticationToken);
-            //Tratamento de erro caso as credenciais estejam erradas
 
+            //Tratamento de erro caso as credenciais estejam erradas
             var tokenJWT = tokenService.generateToken((Users) authentication.getPrincipal());
 
+            // Retorna o token JWT
             return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ValidationError("Invalid credentials"));
+            // Se as credenciais forem inválidas, retorna um status de não autorizado com uma mensagem de erro
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ValidationError("Invalid credentials."));
         }
     }
 }

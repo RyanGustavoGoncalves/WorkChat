@@ -18,13 +18,19 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { registerUser } from '../utils/registerUser';
 import { Toaster } from 'sonner';
+import { loginUser } from '../utils/loginUser/loginUser';
+import { registerUser } from '../utils/registerUser/registerUser';
 
 interface UserData {
     name: string;
     username: string;
     email: string;
+    password: string;
+}
+
+interface loginData {
+    username: string;
     password: string;
 }
 
@@ -38,8 +44,15 @@ const FormAuth: React.FC = () => {
         email: "",
         password: ""
     });
+    const [loginData, setLoginData] = useState<loginData>({
+        username: "",
+        password: ""
+    });
     const handleRegisterUser = async () => {
         await registerUser(userData, profileImage);
+    }
+    const handleLoginUser = async () => {
+        await loginUser(loginData);
     }
     return (
         <Tabs defaultValue="account" className="w-[400px]">
@@ -59,15 +72,19 @@ const FormAuth: React.FC = () => {
                     <CardContent className="space-y-2">
                         <div className="space-y-1">
                             <Label htmlFor="usernameOrEmail">Username or Email</Label>
-                            <Input id="usernameOrEmail" defaultValue="" />
+                            <Input id="usernameOrEmail"
+                                value={loginData.username}
+                                onChange={(e) => setLoginData({ ...loginData, username: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" defaultValue="" />
+                            <Input id="password" type="text"
+                                value={loginData.password}
+                                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} />
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button>Login</Button>
+                        <Button onClick={() => handleLoginUser()}>Login</Button>
                     </CardFooter>
                 </Card>
             </TabsContent>
@@ -81,18 +98,18 @@ const FormAuth: React.FC = () => {
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <div className="space-y-1">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                value={userData.name}
-                                onChange={(e) => setUserData({ ...userData, name: e.target.value })} />
-                        </div>
-                        <div className="space-y-1">
                             <Label htmlFor="username">Username</Label>
                             <Input
                                 id="username"
                                 value={userData.username}
                                 onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
+                        </div>
+                        <div className="space-y-1">
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                value={userData.name}
+                                onChange={(e) => setUserData({ ...userData, name: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="email">Email</Label>
